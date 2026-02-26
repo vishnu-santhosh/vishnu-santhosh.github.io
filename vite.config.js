@@ -4,5 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   base: '/vishnu-santhosh/',
+
   plugins: [react(), tailwindcss()],
 })
