@@ -178,6 +178,8 @@ Your site will be available at:
 - `https://your-username.github.io/` (if repo is named `{username}.github.io`)
 - `https://your-username.github.io/repo-name/` (for other repo names)
 
+> **Note:** If deploying to a subdirectory (e.g., `https://your-username.github.io/repo-name/`), edit `vite.config.js` and change `base: '/'` to `base: '/repo-name/'`, then rebuild and push.
+
 ### Vercel
 
 ```bash
