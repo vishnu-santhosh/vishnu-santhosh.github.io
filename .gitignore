@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Planning files (personal)
+task_plan.md
+progress.md
+findings.md

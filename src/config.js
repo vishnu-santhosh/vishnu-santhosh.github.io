@@ -1,25 +1,27 @@
 export const siteConfig = {
-  name: 'Your Name',
-  tagline: 'Your tagline here.',
-  username: 'your-username',
-  role: 'Your Role',
-  intro: `Hi, I'm Your Name.
+  name: 'Vishnu Santhosh',
+  tagline: "Notes from an engineer who can't stop asking why.",
+  username: 'vishnu',
+  role: 'Software Engineer',
+  currentActivity: 'immersed in Linux kernel and driver development at',
+  sitePhilosophy: 'Exploring the questions that code alone can\'t answer.',
+  intro: `Hi, I'm Vishnu.
 
-I'm a software engineer, systems programmer, and writer.
+I'm a software engineer focused on low-level systems programming.
 
-For the last few years I've been focused on building distributed systems at scale.
+Currently immersed in Linux kernel and driver development at Qualcomm.
 
-Before that, I worked on embedded systems and operating system internals.`,
+Exploring the questions that code alone can't answer.`,
   
-  photoUrl: 'https://github.com/your-username.png',
+  photoUrl: 'https://github.com/vishnu-santhosh.png',
   
   experience: [
     {
       period: '2024 → Present',
       role: 'Software Engineer',
-      company: 'Company Name',
-      link: 'https://company.com/',
-      description: 'Working on distributed systems and scalable infrastructure.'
+      company: 'Qualcomm',
+      link: 'https://www.qualcomm.com/',
+      description: 'Linux kernel and driver development.'
     },
     {
       period: '2022 → 2024',
@@ -33,16 +35,16 @@ Before that, I worked on embedded systems and operating system internals.`,
   otherPursuits: `Outside of work, I'm writing about systems programming, operating system internals, and mentoring junior engineers.`,
   
   social: {
-    github: 'https://github.com/your-username',
-    linkedin: 'https://linkedin.com/in/your-username',
-    twitter: 'https://twitter.com/your-username',
-    email: 'hello@example.com'
+    github: 'https://github.com/vishnu-santhosh',
+    linkedin: 'https://linkedin.com/in/vishnu-santhosh',
+    twitter: 'https://twitter.com/vishnu',
+    email: 'vishnu@example.com'
   },
 
   newsletter: {
     enabled: false,
     provider: 'buttondown',
-    url: 'https://buttondown.email/your-username'
+    url: 'https://buttondown.email/vishnu'
   }
 };
 

@@ -26,7 +26,7 @@ export default function Home() {
           
           <div className="text-gray-300 space-y-2 mb-6">
             <p>
-              Currently building infrastructure at{' '}
+              Currently {siteConfig.currentActivity}{' '}
               <a 
                 href={currentJob.link} 
                 className="text-terminal-cyan hover:underline"
@@ -39,7 +39,7 @@ export default function Home() {
             </p>
             
             <p className="text-gray-400">
-              {currentJob.description}
+              {siteConfig.sitePhilosophy}
             </p>
           </div>
 
