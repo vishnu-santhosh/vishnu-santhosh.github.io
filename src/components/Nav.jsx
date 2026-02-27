@@ -21,7 +21,7 @@ export default function Nav() {
   return (
     <nav className="flex items-center gap-4 mb-8 flex-wrap">
       <NavLink to="/">home</NavLink>
-      <NavLink to="/writing">writing</NavLink>
+      <NavLink to="/articles">articles</NavLink>
       <NavLink to="/about">about</NavLink>
     </nav>
   );
