@@ -71,17 +71,19 @@ export default function Home({ onSearchClick, onSubscribeClick }) {
             {latestArticles.map((article) => (
               <article key={article.slug}>
                 <Link to={`/articles/${article.slug}`} className="block group">
-                  <div className="flex items-baseline gap-3 mb-1">
-                    <span className="text-gray-500 text-xs whitespace-nowrap">
+                  <div className="flex">
+                    <span className="text-gray-500 text-xs whitespace-nowrap w-24 sm:w-28 flex-shrink-0">
                       {formatDate(article.date)}
                     </span>
-                    <h3 className="text-lg text-terminal-cyan group-hover:underline">
-                      {article.title}
-                    </h3>
+                    <div>
+                      <h3 className="text-lg text-terminal-cyan group-hover:underline mb-1">
+                        {article.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        {article.excerpt}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-gray-400 text-sm leading-relaxed ml-24 sm:ml-28">
-                    {article.excerpt}
-                  </p>
                 </Link>
               </article>
             ))}

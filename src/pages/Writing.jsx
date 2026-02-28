@@ -43,17 +43,19 @@ export default function Writing({ onSearchClick }) {
                       to={`/articles/${article.slug}`}
                       className="block cursor-pointer"
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6 mb-2">
-                        <span className="text-gray-500 text-sm whitespace-nowrap sm:w-16">
+                      <div className="flex">
+                        <span className="text-gray-500 text-sm whitespace-nowrap w-16 flex-shrink-0">
                           {article.monthDay}
                         </span>
-                        <h3 className="text-lg text-terminal-cyan hover:underline">
-                          {article.title}
-                        </h3>
+                        <div>
+                          <h3 className="text-lg text-terminal-cyan hover:underline mb-1">
+                            {article.title}
+                          </h3>
+                          <p className="text-gray-400 text-sm leading-relaxed">
+                            {article.excerpt}
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-gray-400 text-sm sm:ml-24 leading-relaxed">
-                        {article.excerpt}
-                      </p>
                     </Link>
                   </article>
                 ))}
