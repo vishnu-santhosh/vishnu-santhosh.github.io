@@ -77,9 +77,9 @@ If that sounds like a journey worth taking, stick around.
   },
 
   newsletter: {
-    enabled: false,
-    provider: 'buttondown',
-    url: 'https://buttondown.email/vishnu'
+    enabled: true,
+    provider: 'substack',
+    url: 'https://themodernunixengineer.substack.com'
   }
 };
 

@@ -4,7 +4,7 @@ import Logo from '../components/Logo';
 import ScrambleText from '../components/ScrambleText';
 import articles from '../data/articles.json';
 
-export default function Home({ onSearchClick }) {
+export default function Home({ onSearchClick, onSubscribeClick }) {
   const latestArticles = articles.slice(0, 4);
   const currentJob = siteConfig.experience[0];
 
@@ -94,30 +94,14 @@ export default function Home({ onSearchClick }) {
               ### Join the mailing list
             </h2>
             <p className="text-gray-400 text-sm mb-4">
-              I'll send new posts to your inbox.
+              Get Linux & kernel insights delivered to your inbox.
             </p>
-            <form 
-              className="flex flex-col sm:flex-row gap-2" 
-              action={siteConfig.newsletter.url}
-              method="GET"
-              target="_blank"
+            <button
+              onClick={onSubscribeClick}
+              className="border border-terminal-green text-terminal-green px-4 py-2 hover:bg-terminal-green hover:text-terminal-bg transition-colors cursor-pointer"
             >
-              <label className="sr-only" htmlFor="email">Email</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="your@email.com"
-                required
-                className="flex-1 bg-terminal-bg border border-terminal-green px-3 py-2 text-terminal-green placeholder-gray-600 focus:outline-none focus:border-terminal-cyan transition-colors"
-              />
-              <button
-                type="submit"
-                className="bg-terminal-green text-terminal-bg px-4 py-2 font-bold hover:bg-terminal-cyan transition-colors cursor-pointer"
-              >
-                Subscribe
-              </button>
-            </form>
+              [ Subscribe ]
+            </button>
           </section>
         )}
 
