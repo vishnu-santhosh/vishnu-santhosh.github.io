@@ -12,6 +12,7 @@ export default function Graph({ onSearchClick }) {
   const navigate = useNavigate();
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
   const [hoveredNode, setHoveredNode] = useState(null);
+  const simulationRef = useRef(null);
   
   const graphData = getGraphData(articles);
 
@@ -44,20 +45,20 @@ export default function Graph({ onSearchClick }) {
     const maxLinks = Math.max(...graphData.nodes.map(n => n.linkCount), 1);
     const radiusScale = d3.scaleSqrt()
       .domain([0, maxLinks])
-      .range([8, 24]);
+      .range([10, 28]);
 
-    const colorScale = d3.scaleSequential()
-      .domain([0, maxLinks])
-      .interpolator(d3.interpolate('#4b5563', '#22c55e'));
+    const nodes = graphData.nodes.map(d => ({...d}));
+    const links = graphData.links.map(d => ({...d}));
 
-    const simulation = d3.forceSimulation(graphData.nodes)
-      .alphaDecay(0.02)
-      .force('link', d3.forceLink(graphData.links).id(d => d.id).distance(100).strength(0.5))
-      .force('charge', d3.forceManyBody().strength(-300))
-      .force('center', d3.forceCenter(centerX, centerY).strength(0.1))
-      .force('collision', d3.forceCollide().radius(d => radiusScale(d.linkCount) + 10).strength(0.8))
-      .force('x', d3.forceX(centerX).strength(0.05))
-      .force('y', d3.forceY(centerY).strength(0.05));
+    const simulation = d3.forceSimulation(nodes)
+      .alphaDecay(0.05)
+      .velocityDecay(0.4)
+      .force('link', d3.forceLink(links).id(d => d.id).distance(120).strength(0.3))
+      .force('charge', d3.forceManyBody().strength(-200))
+      .force('center', d3.forceCenter(centerX, centerY))
+      .force('collision', d3.forceCollide().radius(d => radiusScale(d.linkCount) + 15));
+
+    simulationRef.current = simulation;
 
     const defs = svg.append('defs');
     
@@ -67,99 +68,75 @@ export default function Graph({ onSearchClick }) {
       .attr('cy', '30%');
     gradient.append('stop').attr('offset', '0%').attr('stop-color', '#4ade80');
     gradient.append('stop').attr('offset', '100%').attr('stop-color', '#15803d');
-    
-    const glow = defs.append('filter')
-      .attr('id', 'glow')
-      .attr('x', '-50%')
-      .attr('y', '-50%')
-      .attr('width', '200%')
-      .attr('height', '200%');
-    glow.append('feGaussianBlur')
-      .attr('stdDeviation', '3')
-      .attr('result', 'coloredBlur');
-    const feMerge = glow.append('feMerge');
-    feMerge.append('feMergeNode').attr('in', 'coloredBlur');
-    feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
     const gridGroup = svg.append('g').attr('class', 'grid');
-    const gridSize = 40;
+    const gridSize = 50;
     for (let x = 0; x <= width; x += gridSize) {
-      gridGroup.append('line')
-        .attr('x1', x).attr('y1', 0)
-        .attr('x2', x).attr('y2', height)
-        .attr('stroke', '#1f2937')
-        .attr('stroke-width', 0.5);
+      gridGroup.append('line').attr('x1', x).attr('y1', 0).attr('x2', x).attr('y2', height).attr('stroke', '#1f2937').attr('stroke-width', 0.5);
     }
     for (let y = 0; y <= height; y += gridSize) {
-      gridGroup.append('line')
-        .attr('x1', 0).attr('y1', y)
-        .attr('x2', width).attr('y2', y)
-        .attr('stroke', '#1f2937')
-        .attr('stroke-width', 0.5);
+      gridGroup.append('line').attr('x1', 0).attr('y1', y).attr('x2', width).attr('y2', y).attr('stroke', '#1f2937').attr('stroke-width', 0.5);
     }
 
-    const link = svg.append('g')
-      .selectAll('line')
-      .data(graphData.links)
+    const linkGroup = svg.append('g').attr('class', 'links');
+    const link = linkGroup.selectAll('line')
+      .data(links)
       .join('line')
-      .attr('stroke', d => {
-        const sourceNode = graphData.nodes.find(n => n.id === d.source.id || n.id === d.source);
-        const targetNode = graphData.nodes.find(n => n.id === d.target.id || n.id === d.target);
-        if (sourceNode?.linkCount > 0 && targetNode?.linkCount > 0) return '#22c55e';
-        return '#4b5563';
-      })
-      .attr('stroke-opacity', 0.4)
-      .attr('stroke-width', 1.5)
-      .attr('stroke-dasharray', d => d.type === 'tag' ? '4,4' : '0');
+      .attr('stroke', '#22c55e')
+      .attr('stroke-opacity', 0.3)
+      .attr('stroke-width', 1.5);
 
-    const nodeGroup = svg.append('g')
-      .selectAll('g')
-      .data(graphData.nodes)
+    const nodeGroup = svg.append('g').attr('class', 'nodes');
+    const node = nodeGroup.selectAll('g')
+      .data(nodes)
       .join('g')
       .attr('cursor', 'pointer')
-      .call(d3.drag()
-        .on('start', (event, d) => {
-          if (!event.active) simulation.alphaTarget(0.3).restart();
-          d.fx = d.x;
-          d.fy = d.y;
-        })
-        .on('drag', (event, d) => {
-          d.fx = event.x;
-          d.fy = event.y;
-        })
-        .on('end', (event, d) => {
-          if (!event.active) simulation.alphaTarget(0);
-          d.fx = null;
-          d.fy = null;
-        }));
+      .style('pointer-events', 'all');
 
-    nodeGroup.append('circle')
+    node.append('circle')
       .attr('r', d => radiusScale(d.linkCount))
       .attr('fill', d => d.linkCount > 0 ? 'url(#node-gradient)' : '#4b5563')
       .attr('stroke', d => d.linkCount > 0 ? '#22c55e' : '#6b7280')
-      .attr('stroke-width', 2)
-      .attr('filter', d => d.linkCount > 0 ? 'url(#glow)' : null)
-      .style('transition', 'all 0.2s ease');
+      .attr('stroke-width', 2);
 
-    nodeGroup.append('text')
-      .attr('dy', d => radiusScale(d.linkCount) + 14)
+    node.append('text')
+      .attr('dy', d => radiusScale(d.linkCount) + 16)
       .attr('text-anchor', 'middle')
       .attr('fill', '#9ca3af')
-      .attr('font-size', '10px')
+      .attr('font-size', '11px')
       .attr('font-family', 'monospace')
-      .text(d => d.title.length > 20 ? d.title.substring(0, 18) + '...' : d.title);
+      .text(d => d.title.length > 22 ? d.title.substring(0, 20) + '...' : d.title);
 
-    nodeGroup.on('click', (event, d) => {
+    node.on('click', (event, d) => {
+      event.stopPropagation();
       navigate(`/articles/${d.id}`);
     });
 
-    nodeGroup.on('mouseenter', (event, d) => {
+    node.on('mouseenter', (event, d) => {
       setHoveredNode(d);
     });
 
-    nodeGroup.on('mouseleave', () => {
+    node.on('mouseleave', () => {
       setHoveredNode(null);
     });
+
+    const drag = d3.drag()
+      .on('start', (event, d) => {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      })
+      .on('drag', (event, d) => {
+        d.fx = event.x;
+        d.fy = event.y;
+      })
+      .on('end', (event, d) => {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      });
+
+    node.call(drag);
 
     simulation.on('tick', () => {
       link
@@ -168,8 +145,12 @@ export default function Graph({ onSearchClick }) {
         .attr('x2', d => d.target.x)
         .attr('y2', d => d.target.y);
 
-      nodeGroup.attr('transform', d => `translate(${d.x},${d.y})`);
+      node.attr('transform', d => `translate(${d.x},${d.y})`);
     });
+
+    setTimeout(() => {
+      simulation.stop();
+    }, 3000);
 
     return () => {
       simulation.stop();
@@ -208,18 +189,11 @@ export default function Graph({ onSearchClick }) {
           />
           
           {hoveredNode && (
-            <div className="absolute top-4 left-4 bg-gray-900/95 border border-terminal-green/50 rounded px-4 py-3 backdrop-blur-sm">
+            <div className="absolute top-4 left-4 bg-gray-900/95 border border-terminal-green/50 rounded px-4 py-3 backdrop-blur-sm z-10">
               <p className="text-terminal-cyan font-medium font-mono">{hoveredNode.title}</p>
               <p className="text-gray-500 text-xs mt-1">
                 {hoveredNode.linkCount} connection{hoveredNode.linkCount !== 1 ? 's' : ''}
               </p>
-              {hoveredNode.tags && hoveredNode.tags.length > 0 && (
-                <div className="flex gap-1 mt-2 flex-wrap">
-                  {hoveredNode.tags.slice(0, 3).map(tag => (
-                    <span key={tag} className="text-xs text-terminal-green/60">#{tag}</span>
-                  ))}
-                </div>
-              )}
             </div>
           )}
 
@@ -239,18 +213,6 @@ export default function Graph({ onSearchClick }) {
             <span className="w-3 h-3 rounded-full bg-gray-500"></span>
             <span>Isolated</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="w-6 h-0.5 bg-terminal-green" style={{ borderStyle: 'dashed' }}></span>
-            <span>Tag link</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-6 h-0.5 bg-terminal-green"></span>
-            <span>Wikilink</span>
-          </div>
-        </div>
-
-        <div className="mt-4 text-xs text-gray-600 font-mono">
-          <p>Drag nodes to rearrange · Click to open article · Scroll to zoom (coming soon)</p>
         </div>
 
         <footer className="border-t border-gray-800 pt-6 pb-8 text-sm mt-12">
