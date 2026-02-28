@@ -12,7 +12,6 @@ export default function Graph({ onSearchClick }) {
   const navigate = useNavigate();
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
   const [hoveredNode, setHoveredNode] = useState(null);
-  const [selectedNode, setSelectedNode] = useState(null);
   
   const graphData = getGraphData(articles);
 
@@ -52,6 +51,7 @@ export default function Graph({ onSearchClick }) {
       .interpolator(d3.interpolate('#4b5563', '#22c55e'));
 
     const simulation = d3.forceSimulation(graphData.nodes)
+      .alphaDecay(0.02)
       .force('link', d3.forceLink(graphData.links).id(d => d.id).distance(100).strength(0.5))
       .force('charge', d3.forceManyBody().strength(-300))
       .force('center', d3.forceCenter(centerX, centerY).strength(0.1))
@@ -150,22 +150,15 @@ export default function Graph({ onSearchClick }) {
       .text(d => d.title.length > 20 ? d.title.substring(0, 18) + '...' : d.title);
 
     nodeGroup.on('click', (event, d) => {
-      setSelectedNode(d);
       navigate(`/articles/${d.id}`);
     });
 
     nodeGroup.on('mouseenter', (event, d) => {
       setHoveredNode(d);
-      d3.select(event.currentTarget).select('circle')
-        .attr('stroke-width', 3)
-        .attr('stroke', '#fbbf24');
     });
 
-    nodeGroup.on('mouseleave', (event, d) => {
+    nodeGroup.on('mouseleave', () => {
       setHoveredNode(null);
-      d3.select(event.currentTarget).select('circle')
-        .attr('stroke-width', 2)
-        .attr('stroke', d.linkCount > 0 ? '#22c55e' : '#6b7280');
     });
 
     simulation.on('tick', () => {
