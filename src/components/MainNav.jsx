@@ -28,9 +28,9 @@ export default function MainNav({ onSearchClick, showSearch = true, showGraph = 
           <button
             onClick={onSearchClick}
             className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-            title="Search (Ctrl+K)"
+            title="Grep (Ctrl+K)"
           >
-            search
+            grep
           </button>
         )}
         {showGraph && (
@@ -68,7 +68,7 @@ export default function MainNav({ onSearchClick, showSearch = true, showGraph = 
                   }}
                   className="block w-full text-left px-4 py-2 text-sm hover:bg-terminal-green/10 transition-colors cursor-pointer"
                 >
-                  search
+                  grep
                 </button>
               )}
               {showGraph && (
