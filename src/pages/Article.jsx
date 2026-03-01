@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { navigation } from '../config';
 import Logo from '../components/Logo';
+import MainNav from '../components/MainNav';
 import { formatDate, calculateReadTime } from '../utils/readTime';
 import { getBacklinks } from '../utils/graph';
 
@@ -36,7 +37,7 @@ export default function Article({ articles, onSearchClick }) {
         <div className="max-w-3xl mx-auto">
           <header className="flex flex-row items-center justify-between mb-12 gap-4">
             <Logo />
-            <Nav onSearchClick={onSearchClick} />
+            <MainNav onSearchClick={onSearchClick} />
           </header>
           <h1 className="text-xl">[ERROR] Article not found</h1>
           <Link to="/" className="text-terminal-cyan hover:underline">
@@ -55,7 +56,7 @@ export default function Article({ articles, onSearchClick }) {
         {/* Header */}
         <header className="flex flex-row items-center justify-between mb-12 gap-4">
           <Logo />
-          <Nav onSearchClick={onSearchClick} />
+          <MainNav onSearchClick={onSearchClick} />
         </header>
         
         <Link 
@@ -103,42 +104,6 @@ export default function Article({ articles, onSearchClick }) {
         </footer>
       </div>
     </div>
-  );
-}
-
-function Nav({ onSearchClick }) {
-  return (
-    <nav className="flex items-center gap-3 sm:gap-4">
-      {navigation.slice(1).map((item) => (
-        <NavLink key={item.path} to={item.path}>
-          {item.label}
-        </NavLink>
-      ))}
-      <button
-        onClick={onSearchClick}
-        className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-        title="Search (Ctrl+K)"
-      >
-        search
-      </button>
-      <Link
-        to="/graph"
-        className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-      >
-        graph
-      </Link>
-    </nav>
-  );
-}
-
-function NavLink({ to, children }) {
-  return (
-    <Link
-      to={to}
-      className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-    >
-      {children}
-    </Link>
   );
 }
 

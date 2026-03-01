@@ -3,6 +3,7 @@ import { siteConfig, navigation } from '../config';
 import Logo from '../components/Logo';
 import ScrambleText from '../components/ScrambleText';
 import { formatDate } from '../utils/readTime';
+import MainNav from '../components/MainNav';
 import articles from '../data/articles.json';
 
 export default function Home({ onSearchClick, onSubscribeClick }) {
@@ -17,7 +18,7 @@ export default function Home({ onSearchClick, onSubscribeClick }) {
         {/* Header */}
         <header className="flex flex-row items-center justify-between mb-12 gap-4">
           <Logo />
-          <Nav onSearchClick={onSearchClick} />
+          <MainNav onSearchClick={onSearchClick} />
         </header>
 
         {/* Intro */}
@@ -141,41 +142,5 @@ export default function Home({ onSearchClick, onSubscribeClick }) {
 
       </div>
     </div>
-  );
-}
-
-function Nav({ onSearchClick }) {
-  return (
-    <nav className="flex items-center gap-3 sm:gap-4">
-      {navigation.slice(1).map((item) => (
-        <NavLink key={item.path} to={item.path}>
-          {item.label}
-        </NavLink>
-      ))}
-      <button
-        onClick={onSearchClick}
-        className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-        title="Search (Ctrl+K)"
-      >
-        search
-      </button>
-      <Link
-        to="/graph"
-        className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-      >
-        graph
-      </Link>
-    </nav>
-  );
-}
-
-function NavLink({ to, children }) {
-  return (
-    <Link
-      to={to}
-      className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-    >
-      {children}
-    </Link>
   );
 }

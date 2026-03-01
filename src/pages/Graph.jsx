@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as d3 from 'd3';
-import { navigation } from '../config';
 import Logo from '../components/Logo';
+import MainNav from '../components/MainNav';
 import articles from '../data/articles.json';
 import { getGraphData } from '../utils/graph';
 
@@ -167,7 +167,7 @@ export default function Graph({ onSearchClick }) {
         
         <header className="flex flex-row items-center justify-between mb-8 gap-4">
           <Logo />
-          <Nav onSearchClick={onSearchClick} />
+          <MainNav onSearchClick={onSearchClick} />
         </header>
 
         <div className="mb-6">
@@ -229,38 +229,4 @@ export default function Graph({ onSearchClick }) {
   );
 }
 
-function Nav({ onSearchClick }) {
-  return (
-    <nav className="flex items-center gap-3 sm:gap-4">
-      {navigation.slice(1).map((item) => (
-        <NavLink key={item.path} to={item.path}>
-          {item.label}
-        </NavLink>
-      ))}
-      <button
-        onClick={onSearchClick}
-        className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-        title="Search (Ctrl+K)"
-      >
-        search
-      </button>
-      <Link
-        to="/graph"
-        className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-      >
-        graph
-      </Link>
-    </nav>
-  );
-}
 
-function NavLink({ to, children }) {
-  return (
-    <Link
-      to={to}
-      className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-    >
-      {children}
-    </Link>
-  );
-}

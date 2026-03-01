@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { navigation } from '../config';
 import Logo from '../components/Logo';
+import MainNav from '../components/MainNav';
 import { formatDate } from '../utils/readTime';
 import articles from '../data/articles.json';
 
@@ -33,7 +34,7 @@ export default function Tag({ onSearchClick }) {
         {/* Header */}
         <header className="flex flex-row items-center justify-between mb-12 gap-4">
           <Logo />
-          <Nav onSearchClick={onSearchClick} />
+          <MainNav onSearchClick={onSearchClick} />
         </header>
 
         {/* Tag Header */}
@@ -103,38 +104,4 @@ export default function Tag({ onSearchClick }) {
   );
 }
 
-function Nav({ onSearchClick }) {
-  return (
-    <nav className="flex items-center gap-3 sm:gap-4">
-      {navigation.slice(1).map((item) => (
-        <NavLink key={item.path} to={item.path}>
-          {item.label}
-        </NavLink>
-      ))}
-      <button
-        onClick={onSearchClick}
-        className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-        title="Search (Ctrl+K)"
-      >
-        search
-      </button>
-      <Link
-        to="/graph"
-        className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-      >
-        graph
-      </Link>
-    </nav>
-  );
-}
 
-function NavLink({ to, children }) {
-  return (
-    <Link
-      to={to}
-      className="text-sm sm:text-base transition-all duration-200 hover:text-terminal-green hover:underline cursor-pointer"
-    >
-      {children}
-    </Link>
-  );
-}
